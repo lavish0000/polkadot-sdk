@@ -240,6 +240,9 @@ pub mod pallet {
 		///
 		/// NOTE: This parameter is also used within the Bounties Pallet extension if enabled.
 		#[pallet::constant]
+		#[deprecated(
+			note = "TODO: better deprecation message"
+		)]
 		type MaxApprovals: Get<u32>;
 
 		/// The origin required for approving spends from the treasury outside of the proposal
@@ -279,10 +282,16 @@ pub mod pallet {
 
 	/// Number of proposals that have been made.
 	#[pallet::storage]
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub type ProposalCount<T, I = ()> = StorageValue<_, ProposalIndex, ValueQuery>;
 
 	/// Proposals that have been made.
 	#[pallet::storage]
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub type Proposals<T: Config<I>, I: 'static = ()> = StorageMap<
 		_,
 		Twox64Concat,
@@ -298,6 +307,9 @@ pub mod pallet {
 
 	/// Proposal indices that have been approved but not yet awarded.
 	#[pallet::storage]
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub type Approvals<T: Config<I>, I: 'static = ()> =
 		StorageValue<_, BoundedVec<ProposalIndex, T::MaxApprovals>, ValueQuery>;
 
@@ -449,6 +461,25 @@ pub mod pallet {
 		spend_in_context: BTreeMap<Balance, Balance>,
 	}
 
+	impl<T: Config<I>, I: 'static> Pay for Pallet<T, I> {
+		type Beneficiary = T::Beneficiary;
+		type Balance = AssetBalanceOf<T, I>;
+		type Id = <T::Paymaster as Pay>::Id;
+		type AssetKind = T::AssetKind;
+		type Error = <<T as pallet::Config<I>>::Paymaster as frame_support::traits::tokens::Pay>::Error;
+
+		fn pay(
+			beneficiary: &Self::Beneficiary,
+			asset_kind: Self::AssetKind,
+			amount: Self::Balance,
+		) -> Result<Self::Id, Self::Error> {
+			T::Paymaster::pay(beneficiary, asset_kind, amount)
+		}
+		fn check_payment(id: Self::Id) -> PaymentStatus {
+			T::Paymaster::check_payment(id)
+		}
+	}
+
 	#[pallet::call]
 	impl<T: Config<I>, I: 'static> Pallet<T, I> {
 		/// Propose and approve a spend of treasury funds.
@@ -470,6 +501,7 @@ pub mod pallet {
 		/// Emits [`Event::SpendApproved`] if successful.
 		#[pallet::call_index(3)]
 		#[pallet::weight(T::WeightInfo::spend_local())]
+		#[deprecated(note = "TODO: better deprecation message")]
 		pub fn spend_local(
 			origin: OriginFor<T>,
 			#[pallet::compact] amount: BalanceOf<T, I>,
@@ -538,6 +570,9 @@ pub mod pallet {
 		///   in the first place.
 		#[pallet::call_index(4)]
 		#[pallet::weight((T::WeightInfo::remove_approval(), DispatchClass::Operational))]
+		#[deprecated(
+			note = "TODO: suggest alternative. `remove_approval` will be removed in May 2025"
+		)]
 		pub fn remove_approval(
 			origin: OriginFor<T>,
 			#[pallet::compact] proposal_id: ProposalIndex,
@@ -680,7 +715,7 @@ pub mod pallet {
 				Error::<T, I>::AlreadyAttempted
 			);
 
-			let id = T::Paymaster::pay(&spend.beneficiary, spend.asset_kind.clone(), spend.amount)
+			let id = <Pallet<T, I> as Pay>::pay(&spend.beneficiary, spend.asset_kind.clone(), spend.amount)
 				.map_err(|_| Error::<T, I>::PayoutError)?;
 
 			spend.status = PaymentState::Attempted { id };
@@ -793,16 +828,25 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 	}
 
 	/// Public function to proposal_count storage.
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub fn proposal_count() -> ProposalIndex {
 		ProposalCount::<T, I>::get()
 	}
 
 	/// Public function to proposals storage.
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub fn proposals(index: ProposalIndex) -> Option<Proposal<T::AccountId, BalanceOf<T, I>>> {
 		Proposals::<T, I>::get(index)
 	}
 
 	/// Public function to approvals storage.
+	#[deprecated(
+		note = "TODO: better deprecation message"
+	)]
 	pub fn approvals() -> BoundedVec<ProposalIndex, T::MaxApprovals> {
 		Approvals::<T, I>::get()
 	}
