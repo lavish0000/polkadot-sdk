@@ -24,6 +24,7 @@ serde_json = { workspace = true, default-features = true }
 # Local
 polkadot-omni-node-lib = { features = ["rococo-native", "westend-native"], workspace = true }
 rococo-parachain-runtime = { workspace = true }
+yet-another-parachain-runtime = { workspace = true }
 glutton-westend-runtime = { workspace = true }
 asset-hub-rococo-runtime = { workspace = true, default-features = true }
 asset-hub-westend-runtime = { workspace = true }
