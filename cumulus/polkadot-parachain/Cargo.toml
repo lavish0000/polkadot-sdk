@@ -51,6 +51,7 @@ xcm = { workspace = true, default-features = true }
 
 # Cumulus
 cumulus-primitives-core = { workspace = true, default-features = true }
+cumulus-client-consensus-aura = { workspace = true }
 
 [build-dependencies]
 substrate-build-script-utils = { workspace = true, default-features = true }
@@ -98,4 +99,7 @@ fast-runtime = [
 	"bridge-hub-westend-runtime/fast-runtime",
 	"coretime-rococo-runtime/fast-runtime",
 	"coretime-westend-runtime/fast-runtime",
+]
+full-pov-size = [
+	"cumulus-client-consensus-aura/full-pov-size",
 ]

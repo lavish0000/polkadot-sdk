@@ -82,14 +82,14 @@ impl_opaque_keys! {
 /// This runtime version.
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("test-parachain"),
-	impl_name: create_runtime_str!("test-parachain"),
+	spec_name: create_runtime_str!("yet-another-parachain"),
+	impl_name: create_runtime_str!("yet-another-parachain"),
 	authoring_version: 1,
-	spec_version: 1_014_000,
+	spec_version: 1_001_000,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 6,
-	system_version: 0,
+	system_version: 1,
 };
 
 pub const MILLISECS_PER_BLOCK: u64 = 6000;
@@ -351,9 +351,9 @@ pub type SignedExtra = (
 	frame_system::CheckNonZeroSender<Runtime>,
 	frame_system::CheckSpecVersion<Runtime>,
 	frame_system::CheckTxVersion<Runtime>,
-	// frame_system::CheckGenesis<Runtime>,
+	frame_system::CheckGenesis<Runtime>,
 	frame_system::CheckEra<Runtime>,
-	// frame_system::CheckNonce<Runtime>,
+	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
 	pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
 	cumulus_primitives_storage_weight_reclaim::StorageWeightReclaim<Runtime>,
@@ -469,11 +469,11 @@ impl_runtime_apis! {
 		}
 	}
 
-	// impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Nonce> for Runtime {
-	// 	fn account_nonce(account: AccountId) -> Nonce {
-	// 		System::account_nonce(account)
-	// 	}
-	// }
+	impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Nonce> for Runtime {
+		fn account_nonce(account: AccountId) -> Nonce {
+			System::account_nonce(account)
+		}
+	}
 
 	impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance> for Runtime {
 		fn query_info(

@@ -20,12 +20,12 @@ use crate::chain_spec::get_from_seed;
 use parachains_common::genesis_config_helpers::get_account_id_from_seed;
 use polkadot_omni_node_lib::chain_spec::{Extensions, GenericChainSpec};
 use sc_chain_spec::ChainType;
-use sp_core::{crypto::AccountId32, sr25519};
+use sp_core::{Pair, crypto::AccountId32, sr25519::{self, Pair as SrPair}};
 use yet_another_parachain_runtime::AuraId;
 
 const NUM_ACCOUNT_PAIRS: usize = 16000;
 
-fn derive_accounts(n: usize, seed: String) -> Vec<AccountId32> {
+fn derive_accounts(n: usize, seed: String) -> Vec<SrPair> {
 	let t = std::cmp::min(
 		n,
 		std::thread::available_parallelism().unwrap_or(1usize.try_into().unwrap()).get(),
@@ -43,8 +43,8 @@ fn derive_accounts(n: usize, seed: String) -> Vec<AccountId32> {
 				.into_iter()
 				.map(move |i| {
 					let derivation = format!("{seed}/{i}");
-					get_account_id_from_seed::<sr25519::Public>(&derivation)
-					// <SrPair as Pair>::from_string(&derivation, None).unwrap()
+					// get_account_id_from_seed::<sr25519::Public>(&derivation)
+					<SrPair as Pair>::from_string(&derivation, None).unwrap()
 				})
 				.collect::<Vec<_>>()
 		}));
@@ -78,8 +78,8 @@ pub fn yet_another_parachain_config(
 		get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
 	];
 
-	endowed_accounts.extend(derive_accounts(NUM_ACCOUNT_PAIRS, "//Sender".into()));
-	endowed_accounts.extend(derive_accounts(NUM_ACCOUNT_PAIRS, "//Receiver".into()));
+	endowed_accounts.extend(derive_accounts(NUM_ACCOUNT_PAIRS, "//Sender".into()).into_iter().map(|k| k.public().into()));
+	endowed_accounts.extend(derive_accounts(NUM_ACCOUNT_PAIRS, "//Receiver".into()).into_iter().map(|k| k.public().into()));
 
 	GenericChainSpec::builder(
 		yet_another_parachain_runtime::WASM_BINARY
