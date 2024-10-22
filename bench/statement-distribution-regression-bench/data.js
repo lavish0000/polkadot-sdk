@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729593460656,
+  "lastUpdate": 1729597560407,
   "repoUrl": "https://github.com/paritytech/polkadot-sdk",
   "entries": {
     "statement-distribution-regression-bench": [
@@ -16539,6 +16539,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "test-environment",
             "value": 0.04553718026799994,
+            "unit": "seconds"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "pgherveou@gmail.com",
+            "name": "PG Herveou",
+            "username": "pgherveou"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": false,
+          "id": "21930ed2019219c2ffd57c08c0bf675db467a91f",
+          "message": "[pallet-revive] Eth RPC integration (#5866)\n\nThis PR introduces the necessary changes to pallet-revive for\nintegrating with our Ethereum JSON-RPC.\nThe RPC proxy itself will be added in a follow up.\n\n## Changes\n\n- A new pallet::call `Call::eth_transact`. This is used as a wrapper to\naccept unsigned Ethereum transaction, valid call will be routed to\n`Call::call` or `Call::instantiate_with_code`\n\n- A custom UncheckedExtrinsic struct, that wraps the generic one usually\nand add the ability to check eth_transact calls sent from an Ethereum\nJSON-RPC proxy.\n- Generated types and traits to support implementing a JSON-RPC Ethereum\nproxy.\n\n## Flow Overview:\n- A user submits a transaction via MetaMask or another\nEthereum-compatible wallet.\n- The proxy dry run the transaction and add metadata to the call (gas\nlimit in Weight, storage deposit limit, and length of bytecode and\nconstructor input for contract instantiation)\n- The raw transaction, along with the additional metadata, is submitted\nto the node as an unsigned extrinsic.\n- On the runtime, our custom UncheckedExtrinsic define a custom\nCheckable implementation that converts the unsigned extrinsics into\nchecked one\n - It recovers the signer\n- validates the payload, and injects signed extensions, allowing the\nsystem to increment the nonce and charge the appropriate fees.\n- re-route the call to pallet-revive::Call::call or\npallet-revive::Call::instantiateWithCode\n\n## Dependencies\n\n- https://github.com/koute/polkavm/pull/188\n\n## Follow up PRs\n- #5926  \n- #6147 (previously #5953)\n- #5502\n\n---------\n\nCo-authored-by: Alexander Theißen <alex.theissen@me.com>\nCo-authored-by: Cyrill Leutwiler <cyrill@parity.io>",
+          "timestamp": "2024-10-22T10:27:30Z",
+          "tree_id": "55a71e57808ad3ae000d925744825b0865728b9b",
+          "url": "https://github.com/paritytech/polkadot-sdk/commit/21930ed2019219c2ffd57c08c0bf675db467a91f"
+        },
+        "date": 1729597540012,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Received from peers",
+            "value": 106.39999999999996,
+            "unit": "KiB"
+          },
+          {
+            "name": "Sent to peers",
+            "value": 127.96599999999998,
+            "unit": "KiB"
+          },
+          {
+            "name": "statement-distribution",
+            "value": 0.035500525714,
+            "unit": "seconds"
+          },
+          {
+            "name": "test-environment",
+            "value": 0.04509689886599996,
             "unit": "seconds"
           }
         ]
