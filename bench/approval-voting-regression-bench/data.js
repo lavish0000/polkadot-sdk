@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729593435363,
+  "lastUpdate": 1729597533360,
   "repoUrl": "https://github.com/paritytech/polkadot-sdk",
   "entries": {
     "approval-voting-regression-bench": [
@@ -29158,6 +29158,105 @@ window.BENCHMARK_DATA = {
           {
             "name": "approval-voting/test-environment",
             "value": 0.00001882222,
+            "unit": "seconds"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "pgherveou@gmail.com",
+            "name": "PG Herveou",
+            "username": "pgherveou"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": false,
+          "id": "21930ed2019219c2ffd57c08c0bf675db467a91f",
+          "message": "[pallet-revive] Eth RPC integration (#5866)\n\nThis PR introduces the necessary changes to pallet-revive for\nintegrating with our Ethereum JSON-RPC.\nThe RPC proxy itself will be added in a follow up.\n\n## Changes\n\n- A new pallet::call `Call::eth_transact`. This is used as a wrapper to\naccept unsigned Ethereum transaction, valid call will be routed to\n`Call::call` or `Call::instantiate_with_code`\n\n- A custom UncheckedExtrinsic struct, that wraps the generic one usually\nand add the ability to check eth_transact calls sent from an Ethereum\nJSON-RPC proxy.\n- Generated types and traits to support implementing a JSON-RPC Ethereum\nproxy.\n\n## Flow Overview:\n- A user submits a transaction via MetaMask or another\nEthereum-compatible wallet.\n- The proxy dry run the transaction and add metadata to the call (gas\nlimit in Weight, storage deposit limit, and length of bytecode and\nconstructor input for contract instantiation)\n- The raw transaction, along with the additional metadata, is submitted\nto the node as an unsigned extrinsic.\n- On the runtime, our custom UncheckedExtrinsic define a custom\nCheckable implementation that converts the unsigned extrinsics into\nchecked one\n - It recovers the signer\n- validates the payload, and injects signed extensions, allowing the\nsystem to increment the nonce and charge the appropriate fees.\n- re-route the call to pallet-revive::Call::call or\npallet-revive::Call::instantiateWithCode\n\n## Dependencies\n\n- https://github.com/koute/polkavm/pull/188\n\n## Follow up PRs\n- #5926  \n- #6147 (previously #5953)\n- #5502\n\n---------\n\nCo-authored-by: Alexander Theißen <alex.theissen@me.com>\nCo-authored-by: Cyrill Leutwiler <cyrill@parity.io>",
+          "timestamp": "2024-10-22T10:27:30Z",
+          "tree_id": "55a71e57808ad3ae000d925744825b0865728b9b",
+          "url": "https://github.com/paritytech/polkadot-sdk/commit/21930ed2019219c2ffd57c08c0bf675db467a91f"
+        },
+        "date": 1729597515277,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Sent to peers",
+            "value": 63623.409999999996,
+            "unit": "KiB"
+          },
+          {
+            "name": "Received from peers",
+            "value": 52938.2,
+            "unit": "KiB"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-db",
+            "value": 2.1677067141800017,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-1",
+            "value": 2.443529047380001,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting",
+            "value": 0.00002215737,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-distribution",
+            "value": 0.00002133918,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-0",
+            "value": 2.4863123526899984,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-distribution/test-environment",
+            "value": 0.00002133918,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-3",
+            "value": 2.4525932257000003,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-subsystem",
+            "value": 0.5148689624299561,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel",
+            "value": 12.58529778693996,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting/test-environment",
+            "value": 0.00002215737,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-gather-signatures",
+            "value": 0.006284676700000001,
+            "unit": "seconds"
+          },
+          {
+            "name": "test-environment",
+            "value": 3.418592705252313,
+            "unit": "seconds"
+          },
+          {
+            "name": "approval-voting-parallel/approval-voting-parallel-2",
+            "value": 2.5140028078600003,
             "unit": "seconds"
           }
         ]
